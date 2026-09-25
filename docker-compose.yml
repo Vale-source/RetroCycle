@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Base de Datos Relacional PostgreSQL 16
+  postgres:
+    image: postgres:16-alpine
+    container_name: retrocycle_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: retro_user
+      POSTGRES_PASSWORD: retro_secret_password_2026
+      POSTGRES_DB: retrocycle_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retro_user -d retrocycle_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend REST API con FastAPI & Python 3.11
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: retrocycle_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://retro_user:retro_secret_password_2026@postgres:5432/retrocycle_db
+      SECRET_KEY: super_secret_jwt_key_retrocycle_marketplace_2026
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+      ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  # Frontend SPA con React, Vite y Tailwind
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: retrocycle_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

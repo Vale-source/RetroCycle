@@ -1,0 +1,6 @@
+{
+  "name": "RetroCycle - Marketplace de Hardware Vintage y Reciclaje",
+  "description": "Marketplace especializado en hardware informático clásico, piezas de recambio, intercambio y reciclaje de residuos electrónicos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

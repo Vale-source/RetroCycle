@@ -53,7 +53,15 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-# --- HEALTH CHECK ---
+# --- ROOT & HEALTH CHECK ---
+@app.get("/", tags=["Salud"])
+def root():
+    return {"message": "Bienvenido a RetroCycle REST API", "docs": "/docs", "health": "/health"}
+
+@app.get("/api/v1", tags=["Salud"])
+def api_v1_root():
+    return {"status": "ok", "version": "v1", "endpoints": ["/api/v1/listings", "/api/v1/auth/register", "/api/v1/offers"]}
+
 @app.get("/health", tags=["Salud"])
 def health_check():
     return {"status": "ok", "service": "RetroCycle API", "engine": "FastAPI ASGI"}

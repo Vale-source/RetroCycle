@@ -1,6 +1,5 @@
 export const GOOGLE_MAPS_API_KEY =
-  (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY ||
-  'AIzaSyAzjoeY_9pifU-ddvdGfxy3XVnNtSlXiaA';
+  (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY;
 
 // Dark retro theme for Google Maps fitting the platform's neutral-950 palette
 export const DARK_MAP_STYLES: google.maps.MapTypeStyle[] = [
